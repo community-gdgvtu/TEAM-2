@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mindtrace
+      POSTGRES_PASSWORD: mindtrace
+      POSTGRES_DB: mindtrace
+    ports:
+      - "5432:5432"
+    volumes:
+      - mindtrace_pg:/var/lib/postgresql/data
+
+volumes:
+  mindtrace_pg:
