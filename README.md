@@ -16,7 +16,7 @@ Two interchangeable pulse-extraction engines:
 - **Classic** — the classical POS signal-processing algorithm (Wang et al., 2017), hand-ported to TypeScript. Fast, runs on any device.
 - **AI Model (ONNX)** — a PhysNet 3D-CNN converted from a Hugging Face checkpoint ([`hyunseop/vision-cardio-rppg`](https://huggingface.co/hyunseop/vision-cardio-rppg)) to ONNX and run client-side via ONNX Runtime Web (Worker-proxied so it never blocks the game). More accurate, heavier.
 
-This website/game is a research prototype proving the sensing pipeline works end-to-end — not the intended final product. See the [pitch deck](#) for the longer-term vision: a background layer that watches for harmful stress and dopamine bursts across any screen a child uses, parent-controlled, fully on-device.
+This website/game is a research prototype proving the sensing pipeline works end-to-end — not the intended final product. The longer-term vision: a background layer that watches for harmful stress and dopamine bursts across any screen a child uses, parent-controlled, fully on-device.
 
 ## Tech stack
 
