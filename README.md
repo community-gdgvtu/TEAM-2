@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mindtrace: Catch the Pets
 
-## Getting Started
+A prototype for GDG VTU's SDG hackathon (SDG 3 — Good Health & Well-Being) that reads a child's physiological stress response — entirely on-device, in the browser — starting with a simple catch-the-pet game.
 
-First, run the development server:
+No video is ever recorded or uploaded. All camera processing happens locally.
+
+## What it does
+
+1. A quick pre-game form (name, age, parent email) and consent step.
+2. A 20-second calibration builds a personal resting-HR / HRV baseline for that specific child.
+3. While the child plays, the camera estimates heart rate and heart-rate variability (HRV) from subtle color changes in their skin (remote photoplethysmography, rPPG) and classifies stress against their own baseline — not a generic cutoff.
+4. After the round, a parent-gated report shows a stress timeline chart, stress bursts, the longest sustained stress stretch, a general pediatric HR reference comparison, and a few plain-language recommendations — with an optional `mailto:` summary.
+
+Two interchangeable pulse-extraction engines:
+
+- **Classic** — the classical POS signal-processing algorithm (Wang et al., 2017), hand-ported to TypeScript. Fast, runs on any device.
+- **AI Model (ONNX)** — a PhysNet 3D-CNN converted from a Hugging Face checkpoint ([`hyunseop/vision-cardio-rppg`](https://huggingface.co/hyunseop/vision-cardio-rppg)) to ONNX and run client-side via ONNX Runtime Web (Worker-proxied so it never blocks the game). More accurate, heavier.
+
+This website/game is a research prototype proving the sensing pipeline works end-to-end — not the intended final product. See the [pitch deck](#) for the longer-term vision: a background layer that watches for harmful stress and dopamine bursts across any screen a child uses, parent-controlled, fully on-device.
+
+## Tech stack
+
+Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS 4 · ONNX Runtime Web · a custom HRV/stress/baseline pipeline · Playwright for end-to-end verification.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Try **Classic** (`/play`) or **AI Model** (`/play-ai`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Disclaimer
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Not a medical device. Stress classification uses fixed heuristic thresholds, not clinically validated cutoffs. Built for prototyping and research purposes.
