@@ -119,12 +119,42 @@ export default function CatchGame({ running, onScoreChange, onGameOver }: CatchG
 
       context.clearRect(0, 0, size.w, size.h);
 
-      // sky background
+      // rainbow-sky background
       const grad = context.createLinearGradient(0, 0, 0, size.h);
-      grad.addColorStop(0, "#bfe9ff");
+      grad.addColorStop(0, "#ffd6f5");
+      grad.addColorStop(0.4, "#bfe9ff");
       grad.addColorStop(1, "#eafff1");
       context.fillStyle = grad;
       context.fillRect(0, 0, size.w, size.h);
+
+      // sun
+      context.fillStyle = "#ffe066";
+      context.beginPath();
+      context.arc(size.w - 56, 54, 30, 0, Math.PI * 2);
+      context.fill();
+
+      // drifting clouds
+      context.fillStyle = "rgba(255,255,255,0.85)";
+      const cloudDrift = (now / 1000) % (size.w + 160);
+      [0, 1, 2].forEach((i) => {
+        const cx = ((cloudDrift + i * 260) % (size.w + 160)) - 80;
+        const cy = 40 + i * 46;
+        [0, 1, 2].forEach((j) => {
+          context.beginPath();
+          context.arc(cx + j * 18, cy + (j === 1 ? -8 : 0), 16, 0, Math.PI * 2);
+          context.fill();
+        });
+      });
+
+      // grassy ground strip with little flowers
+      context.fillStyle = "#bdf0b0";
+      context.fillRect(0, size.h - 18, size.w, 18);
+      context.fillStyle = "#ff9ecf";
+      for (let fx = 20; fx < size.w; fx += 60) {
+        context.beginPath();
+        context.arc(fx, size.h - 9, 3, 0, Math.PI * 2);
+        context.fill();
+      }
 
       const basketTop = size.h - BASKET_HEIGHT - 10;
       const dt = 1 / 60;
@@ -162,9 +192,10 @@ export default function CatchGame({ running, onScoreChange, onGameOver }: CatchG
         context.fillText(pet.emoji, pet.x, pet.y);
       }
 
-      // draw basket
+      // draw basket, with a gentle bob for charm
+      const basketBob = Math.sin(now / 260) * 3;
       context.font = "48px serif";
-      context.fillText("🧺", basketXRef.current, basketTop + BASKET_HEIGHT / 2);
+      context.fillText("🧺", basketXRef.current, basketTop + BASKET_HEIGHT / 2 + basketBob);
 
       if (!gameOverRef.current) {
         rafRef.current = requestAnimationFrame(frame);
@@ -182,8 +213,10 @@ export default function CatchGame({ running, onScoreChange, onGameOver }: CatchG
   return (
     <div ref={containerRef} className="w-full">
       <div className="mb-2 flex items-center justify-between px-1">
-        <div className="text-lg font-bold text-emerald-700">Score: {score}</div>
-        <div className="text-lg" aria-label={`${lives} lives left`}>
+        <div className="font-display rounded-full bg-orange-100 px-4 py-1 text-lg font-semibold text-orange-600 shadow-sm">
+          ⭐ {score}
+        </div>
+        <div className="text-xl" aria-label={`${lives} lives left`}>
           {"❤️".repeat(Math.max(0, lives))}
           {"🤍".repeat(Math.max(0, MAX_LIVES - lives))}
         </div>
@@ -192,9 +225,9 @@ export default function CatchGame({ running, onScoreChange, onGameOver }: CatchG
         ref={canvasRef}
         width={size.w}
         height={size.h}
-        className="w-full touch-none rounded-2xl border-4 border-white shadow-lg"
+        className="w-full touch-none rounded-[2rem] border-8 border-white shadow-[0_0_0_4px_rgb(253,224,71)]"
       />
-      <p className="mt-2 text-center text-sm text-slate-500">
+      <p className="mt-2 text-center text-sm font-medium text-slate-500">
         Move your mouse, finger, or arrow keys to catch the pets in the basket!
       </p>
     </div>

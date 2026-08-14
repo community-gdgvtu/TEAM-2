@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import Link from "next/link";
 import CatchGame from "@/components/CatchGame";
+import SkyBackground from "@/components/SkyBackground";
 import StressTimelineChart from "@/components/StressTimelineChart";
 import { computeBaseline, DeviationTracker, type DeviationEvent, type PersonalBaseline } from "@/lib/stress/baseline";
 import { computeHrvFeatures } from "@/lib/hrv/features";
@@ -180,43 +181,47 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
   }, []);
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center gap-6 px-4 py-8">
-      <Link href="/" className="self-start text-sm text-slate-500 hover:underline">
+    <main className="relative mx-auto flex min-h-screen max-w-3xl flex-col items-center gap-6 px-4 py-8">
+      <SkyBackground />
+      <Link
+        href="/"
+        className="self-start rounded-full bg-white/80 px-4 py-1.5 text-sm font-semibold text-sky-700 shadow-sm hover:bg-white"
+      >
         ← Back home
       </Link>
 
       {stage === "intro" && (
-        <section className="w-full rounded-3xl bg-white p-8 text-center shadow-lg">
-          <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-700">
+        <section className="w-full animate-pop-in rounded-[2rem] border-4 border-yellow-200 bg-white p-8 text-center shadow-lg">
+          <span className="inline-block rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-orange-600">
             {engineBadge}
           </span>
-          <h1 className="mt-3 text-3xl font-extrabold text-emerald-700">Catch the Pets! 🐾</h1>
+          <h1 className="mt-3 font-display text-4xl font-semibold text-orange-500">Catch the Pets! 🐾</h1>
           <p className="mt-3 text-slate-600">
             This game uses your camera to gently watch your heartbeat while you play — no video is ever
             recorded or sent anywhere, everything happens right here in your browser.
           </p>
           <p className="mt-2 text-sm text-slate-500">{engineNote}</p>
 
-          <div className="mx-auto mt-6 max-w-xs space-y-3 text-left">
-            <p className="text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <div className="mx-auto mt-6 max-w-xs space-y-3 rounded-3xl bg-sky-50 p-4 text-left">
+            <p className="text-center text-xs font-bold uppercase tracking-wide text-sky-500">
               For grown-ups, before we start
             </p>
-            <label className="block text-sm text-slate-600">
+            <label className="block text-sm font-medium text-slate-600">
               Child&apos;s name
               <input
                 type="text"
                 value={childName}
                 onChange={(e) => setChildName(e.target.value)}
                 placeholder="e.g. Maya"
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-slate-800"
+                className="mt-1 w-full rounded-xl border-2 border-sky-200 px-3 py-2 text-slate-800 focus:border-sky-400 focus:outline-none"
               />
             </label>
-            <label className="block text-sm text-slate-600">
+            <label className="block text-sm font-medium text-slate-600">
               Child&apos;s age
               <select
                 value={childAge}
                 onChange={(e) => setChildAge(e.target.value ? Number(e.target.value) : "")}
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-slate-800"
+                className="mt-1 w-full rounded-xl border-2 border-sky-200 px-3 py-2 text-slate-800 focus:border-sky-400 focus:outline-none"
               >
                 <option value="">Select age…</option>
                 {AGE_OPTIONS.map((a) => (
@@ -226,14 +231,14 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
                 ))}
               </select>
             </label>
-            <label className="block text-sm text-slate-600">
+            <label className="block text-sm font-medium text-slate-600">
               Your email (for the report)
               <input
                 type="email"
                 value={parentEmail}
                 onChange={(e) => setParentEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="mt-1 w-full rounded-lg border px-3 py-2 text-slate-800"
+                className="mt-1 w-full rounded-xl border-2 border-sky-200 px-3 py-2 text-slate-800 focus:border-sky-400 focus:outline-none"
               />
             </label>
           </div>
@@ -243,32 +248,35 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="h-5 w-5"
+              className="h-5 w-5 accent-emerald-500"
             />
             A grown-up says it&apos;s okay to turn on the camera
           </label>
           <button
             disabled={!consent || !profileValid}
             onClick={beginCamera}
-            className="mt-6 rounded-full bg-emerald-500 px-8 py-3 text-lg font-bold text-white shadow disabled:cursor-not-allowed disabled:opacity-40 hover:bg-emerald-600"
+            className="mt-6 rounded-full bg-emerald-500 px-8 py-3 text-lg font-bold text-white shadow-[0_5px_0_rgb(4,120,87)] transition-transform hover:-translate-y-0.5 active:translate-y-1 active:shadow-none disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-40 disabled:shadow-[0_5px_0_rgb(4,120,87)]"
           >
-            Let&apos;s Play!
+            Let&apos;s Play! 🎉
           </button>
         </section>
       )}
 
       {stage === "camera" && status === "requesting" && (
-        <section className="w-full rounded-3xl bg-white p-8 text-center shadow-lg">
-          <p className="text-lg">Asking for camera permission… please click &quot;Allow&quot; 📷</p>
+        <section className="w-full animate-pop-in rounded-[2rem] border-4 border-sky-200 bg-white p-8 text-center shadow-lg">
+          <p className="text-lg font-medium">Asking for camera permission… please click &quot;Allow&quot; 📷</p>
         </section>
       )}
 
       {status === "denied" && stage !== "intro" && (
-        <section className="w-full rounded-3xl bg-white p-8 text-center shadow-lg">
+        <section className="w-full animate-pop-in rounded-[2rem] border-4 border-rose-200 bg-white p-8 text-center shadow-lg">
           <p className="text-lg text-rose-600">
             Camera access was blocked. Please allow camera permission in your browser settings and try again.
           </p>
-          <button onClick={beginCamera} className="mt-4 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white">
+          <button
+            onClick={beginCamera}
+            className="mt-4 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white shadow-[0_4px_0_rgb(4,120,87)] hover:-translate-y-0.5"
+          >
             Try Again
           </button>
         </section>
@@ -279,13 +287,13 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
       <video ref={videoRef} muted playsInline aria-hidden className="pointer-events-none fixed left-0 top-0 h-1 w-1 opacity-0" />
 
       {stage === "calibrating" && (
-        <section className="w-full rounded-3xl bg-white p-8 text-center shadow-lg">
-          <h2 className="text-2xl font-bold text-emerald-700">Getting Ready…</h2>
+        <section className="w-full animate-pop-in rounded-[2rem] border-4 border-violet-200 bg-white p-8 text-center shadow-lg">
+          <h2 className="font-display text-3xl font-semibold text-violet-500">Getting Ready…</h2>
           <p className="mt-2 text-slate-600">Hold still and look at the circle for a few seconds 🙂</p>
           <div className="relative mx-auto mt-6 flex h-56 w-56 items-center justify-center">
             <CameraPreview videoRef={videoRef} roi={roi} />
           </div>
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-3 text-sm font-semibold text-slate-500">
             {snapshot.heartRateBpm ? `❤️ ${Math.round(snapshot.heartRateBpm)} bpm` : "📡 finding your pulse…"}
           </p>
           {modelStatus === "loading" && (
@@ -294,9 +302,9 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
           {modelStatus === "error" && (
             <p className="mt-1 text-xs text-rose-500">Model failed to load{modelError ? `: ${modelError}` : ""}.</p>
           )}
-          <div className="mx-auto mt-6 h-3 w-full max-w-sm overflow-hidden rounded-full bg-slate-200">
+          <div className="mx-auto mt-6 h-4 w-full max-w-sm overflow-hidden rounded-full bg-violet-100">
             <div
-              className="h-full rounded-full bg-emerald-500 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-pink-400 via-orange-400 to-yellow-400 transition-all"
               style={{ width: `${Math.round(calibProgress * 100)}%` }}
             />
           </div>
@@ -306,7 +314,10 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
           {calibMessage && (
             <div className="mt-4">
               <p className="text-rose-600">{calibMessage}</p>
-              <button onClick={retryCalibration} className="mt-3 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white">
+              <button
+                onClick={retryCalibration}
+                className="mt-3 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white shadow-[0_4px_0_rgb(4,120,87)] hover:-translate-y-0.5"
+              >
                 Try Again
               </button>
             </div>
@@ -321,19 +332,22 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
       )}
 
       {stage === "report" && (
-        <section className="w-full rounded-3xl bg-white p-8 shadow-lg">
+        <section className="w-full animate-pop-in rounded-[2rem] border-4 border-emerald-200 bg-white p-8 shadow-lg">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-emerald-700">Nice job!</h2>
-            <p className="mt-1 text-xl">You caught {finalScore} pets 🎉</p>
-            <button onClick={playAgain} className="mt-4 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white">
+            <h2 className="font-display text-4xl font-semibold text-emerald-500">Nice job! 🎉</h2>
+            <p className="mt-1 text-xl font-medium text-slate-700">You caught {finalScore} pets</p>
+            <button
+              onClick={playAgain}
+              className="mt-4 rounded-full bg-emerald-500 px-6 py-2 font-bold text-white shadow-[0_4px_0_rgb(4,120,87)] hover:-translate-y-0.5"
+            >
               Play Again
             </button>
           </div>
 
-          <div className="mt-8 border-t pt-6">
+          <div className="mt-8 border-t-2 border-dashed border-slate-200 pt-6">
             {!gateOpen ? (
-              <div className="mx-auto max-w-xs text-center">
-                <p className="text-sm font-semibold text-slate-500">For grown-ups</p>
+              <div className="mx-auto max-w-xs rounded-3xl bg-sky-50 p-4 text-center">
+                <p className="text-sm font-bold text-sky-600">For grown-ups</p>
                 <p className="mt-1 text-sm text-slate-500">
                   Answer this to see the wellness report: what is {gateNums[0]} + {gateNums[1]}?
                 </p>
@@ -342,13 +356,13 @@ export default function PlaySession({ useEngine, engineBadge, engineNote }: Play
                     type="number"
                     value={gateAnswer}
                     onChange={(e) => setGateAnswer(e.target.value)}
-                    className="w-20 rounded-lg border px-3 py-1 text-center"
+                    className="w-20 rounded-xl border-2 border-sky-200 px-3 py-1 text-center focus:border-sky-400 focus:outline-none"
                   />
                   <button
                     onClick={() => {
                       if (Number(gateAnswer) === gateNums[0] + gateNums[1]) setGateOpen(true);
                     }}
-                    className="rounded-lg bg-slate-700 px-4 py-1 font-semibold text-white"
+                    className="rounded-xl bg-slate-700 px-4 py-1 font-semibold text-white hover:bg-slate-800"
                   >
                     View
                   </button>
@@ -386,7 +400,7 @@ function CameraPreview({ videoRef, roi }: { videoRef: RefObject<HTMLVideoElement
     if (src && previewRef.current) previewRef.current.srcObject = src;
   }, [videoRef]);
   return (
-    <div className="relative h-56 w-56 overflow-hidden rounded-full border-4 border-emerald-400 bg-slate-200">
+    <div className="relative h-56 w-56 overflow-hidden rounded-full border-8 border-violet-300 bg-slate-200 shadow-[0_0_0_4px_white]">
       <video ref={previewRef} autoPlay muted playsInline className="absolute inset-0 h-full w-full object-cover" />
       <div
         className="pointer-events-none absolute rounded-full border-2 border-dashed border-white/80"
@@ -616,9 +630,9 @@ function ParentReport({
       {parentEmail && (
         <a
           href={mailtoHref}
-          className="block rounded-full bg-slate-700 px-6 py-2 text-center font-semibold text-white hover:bg-slate-800"
+          className="block rounded-full bg-sky-600 px-6 py-3 text-center font-bold text-white shadow-[0_4px_0_rgb(3,105,161)] transition-transform hover:-translate-y-0.5"
         >
-          Send Report to {parentEmail}
+          📧 Send Report to {parentEmail}
         </a>
       )}
 
